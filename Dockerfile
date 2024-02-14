@@ -8,6 +8,8 @@ FROM python:3.12.1
 
 WORKDIR /usr/src/app
 
+
+#https://stackoverflow.com/questions/28372328/how-to-install-the-google-cloud-sdk-in-a-docker-image
 RUN apt-get install -y curl
 # Downloading gcloud package
 RUN curl https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz > /tmp/google-cloud-sdk.tar.gz
@@ -19,6 +21,7 @@ RUN mkdir -p /usr/local/gcloud \
 
 # Adding the package path to local
 ENV PATH $PATH:/usr/local/gcloud/google-cloud-sdk/bin
+
 
 #RUN pip install --upgrade pip
 
