@@ -54,12 +54,15 @@ gcloud compute instances create test-server \
     - `docker run bash` => this will create a container and block your terminal
     - open a shell inside the container from another terminal => `docker exec -it CONTAINER_NAME /bin/bash`
 
-## TODOS
+## script everything with Docker
 
 - script this process inside Docker:
 
     1. install `gcloud` CLI
     2. authenticate with your project (maybe with a key?)
+
+    ![key example](./screenshot-1.png)
+
     3. create a VM with a startup script
     4. enable HTTP traffic
     5. ping the VM to check if it's up
