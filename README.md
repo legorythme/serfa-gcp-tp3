@@ -48,6 +48,11 @@ gcloud compute instances create test-server \
 
 - https://cloud.google.com/sdk/docs/scripting-gcloud
 - https://cloud.google.com/blog/products/management-tools/scripting-with-gcloud-a-beginners-guide-to-automating-gcp-tasks
+- there is a `bash.Dockerfile` image at the root of the repo, this is to test bash commands on Ubuntu, to use it
+
+    - `docker build -f bash.Dockerfile -t bash .`
+    - `docker run bash` => this will create a container and block your terminal
+    - open a shell inside the container from another terminal => `docker exec -it CONTAINER_NAME /bin/bash`
 
 ## TODOS
 
@@ -61,3 +66,5 @@ gcloud compute instances create test-server \
     6. delete the VM
 
 ... the goal is to do all these steps with a simple `docker run IMAGE...` command.
+
+`docker build --build-arg PROJECT_NAME=markets-agent --build-arg SERVICE_ACCOUNT_EMAIL=vms-sa@markets-agent.iam.gserviceaccount.com -t gcp-vm .`
