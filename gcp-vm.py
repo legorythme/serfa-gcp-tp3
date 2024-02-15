@@ -3,6 +3,25 @@ import os
 import subprocess
 import sys
 
+# RUN gcloud config set project ${PROJECT_NAME}
+# RUN gcloud auth activate-service-account ${SERVICE_ACCOUNT_EMAIL} --key-file=/vms-sa.json --project=${PROJECT_NAME}
+# # ! to check, within the container, if project is set correctly => `gcloud config get-value project`
+# # ! to test the gcloud CLI auth => `gcloud auth application-default print-access-token`
+
+# # ! if you wish to init the gcloud CLI manually => run `gcloud init` from within the container
+def authenticate_gcloud():
+  # we set non interactive mode
+  disable_prompts_command=f"gcloud config set disable_prompts True"
+  try:
+    subprocess.run(disable_prompts_command, shell=True, check=True)
+  except subprocess.CalledProcessError as e:
+    print(f"error disabling gcloud prompts: {e}")
+  auth_command = f"gcloud auth activate-service-account {os.getenv('GCP_VMS_SERVICE_ACCOUNT_EMAIL')} --key-file=/vms-sa.json --project={os.getenv('GCP_PROJECT')}"
+  try:
+    subprocess.run(auth_command, shell=True, check=True)
+  except subprocess.CalledProcessError as e:
+    print(f"error authenticating gcloud CLI: {e}")
+
 def create_vm(vm_name: str, tags: str = "http-server"):
   region = str(os.getenv('GCP_ZONE'))[:-2]
   gcloud_command = f"""gcloud compute instances create {vm_name} \
@@ -48,19 +67,29 @@ def enable_http_traffic():
     print(f"error enabling HTTP traffic for 'http-server' tag instances: {e}")
 
 def get_vm_ip(vm_name: str) :
-  gcloud_command = f"gcloud compute instances describe {vm_name} --format='get(networkInterfaces[0].accessConfigs[0].natIP)'"
+  gcloud_command = f"gcloud compute instances describe {vm_name} --format='get(networkInterfaces[0].accessConfigs[0].natIP)' --zone={os.getenv('GCP_ZONE')}"
   try:
     print(f"getting IP for VM instance {vm_name} ...")
-    subprocess.run(gcloud_command, shell=True, check=True)
+    call = subprocess.run(gcloud_command, shell=True, check=True, capture_output=True)
+    res = call.stdout.decode('utf-8').strip()
+    print(res)
   except subprocess.CalledProcessError as e:
     print(str(e))
     print(f"error getting IP for VM instance {vm_name}")
   
+# running script code starts here,
+# what is before are declarations of functions
 if __name__ == '__main__':
+  # load environment variables from .env file
   load_dotenv()
 
   # check if required env vars exist and are not empty
-  required_env_vars = ['DEFAULT_COMPUTE_SERVICE_ACCOUNT', 'GCP_PROJECT', 'GCP_ZONE']
+  required_env_vars = [
+    'DEFAULT_COMPUTE_SERVICE_ACCOUNT', 
+    'GCP_PROJECT', 
+    'GCP_VMS_SERVICE_ACCOUNT_EMAIL',
+    'GCP_ZONE'
+  ]
   for e_var in required_env_vars:
     if os.getenv(e_var) is None:
       print(f"error: missing required environment variable {e_var}")
@@ -68,6 +97,8 @@ if __name__ == '__main__':
     elif str(os.getenv(e_var)).strip() == '':
         print(f"error: required environment variable {e_var} is empty")
         sys.exit(1)
+
+  authenticate_gcloud()
 
   if (len(sys.argv) < 1):
     print("usage: python gcp-vm.py <action> ...")
@@ -78,6 +109,7 @@ if __name__ == '__main__':
 
   actions_requiring_vm_name = ["create", "delete", "ip"]
   vm_name = ''
+
   if action in actions_requiring_vm_name:
     if (len(sys.argv) < 3):
       print(f"usage: python gcp-vm.py {action} <vm_name>")
@@ -85,6 +117,7 @@ if __name__ == '__main__':
     else:
       vm_name = sys.argv[2]
 
+  # list of actions start here
   if action == "create":
     # get the name of the VM instance
     print(f"creating VM instance {vm_name} ...")
@@ -100,3 +133,7 @@ if __name__ == '__main__':
   elif action == "ip":
     # get the name of the VM instance
     get_vm_ip(vm_name)
+
+  else:
+    print(f"error: unknown action {action}")
+    sys.exit(1)
