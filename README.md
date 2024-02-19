@@ -82,7 +82,9 @@ Now, with a VM that is up and not being deleted, we want to update our applicati
 
 First, we need to try the whole process manually:
 
-### create the SSH keys that allow you to connect to the VM
+### manual steps
+
+#### create the SSH keys that allow you to connect to the VM
 
 `gcloud compute ssh VM_NAME --zone=ZONE` to:
 
@@ -90,7 +92,7 @@ First, we need to try the whole process manually:
 - this will create the keys, the first time you connect to the machine, and store them in the default location `~/.ssh` (on a Debian distro) for SSH
 - you can now exit the VM
 
-### impersonate the SSH user that will connect to the VM
+#### impersonate the SSH user that will connect to the VM
 
 In this step, what we want is to be able to not use `gcloud` to get inside the VM. Why don't we want to use `gcloud`? it's because we want the simplest and the most generic way to connect to our machine without having to install additional dependencies (such as `gcloud`) in our CI/CD pipeline.
 
@@ -98,13 +100,13 @@ For this, we'll register our newly created keys with the `ssh-agent` on our loca
 
 Here, `google_compute_engine` is the name of the private key file that `gcloud` created for us.
 
-### try to connect to the VM without `gcloud`
+#### try to connect to the VM without `gcloud`
 
 `ssh USER@IP`, this should allow you to access the VM.
 
 If you don't know or remember the `USER` part, just use `gcloud` again to connect to the VM and check the user name once inside it.
 
-### try copying files inside the VM
+#### try copying files inside the VM
 
 `scp test.txt USER@IP:/var/www/html` => this copies the the file inside the VM's `/var/www/html` folder.
 
@@ -113,3 +115,65 @@ The first time you'll run this, you will encounter a permissions issue: it's bec
 Now if you copy again the file and go to `http://IP/test.txt` you should see the content of the file.
 
 Ok, now let's update our site with a pipeline !
+
+## automate the process
+
+Now we are ready to do all of the above via GitHub Actions.
+
+The step `sudo chown USER -R /var/www/html` needs to be run only once, so no need to add that in the pipeline as well.
+
+What do we need to implement continuous deployment?
+
+1. write the pipeline in `.github/workflows/cicd.yml`
+
+```yaml
+name: cicd
+
+on:
+  push:
+      branches: [main]
+
+jobs:
+
+  gcp-vm-sysadmin:
+    name: gcp-vm-sysadmin
+    runs-on: ubuntu-latest
+    steps:
+    - name: sysadmin ops on GCP VM
+      uses: appleboy/ssh-action@v1.0.1
+      env:
+        DEBIAN_FRONTEND: "noninteractive"
+      with:
+        # should be the IP address of your VM
+        host: ${{ secrets.SSH_HOST }}
+        # should be the SSH key that you used to connect to the VM
+        key: ${{ secrets.SSH_PRIV_KEY }}
+        port: 22
+        username: ${{ secrets.SSH_USERNAME }}
+        script_stop: true
+        # all the commands you see after the `|` will be executed in the remote machine
+        script: |
+            sudo apt-get update && sudo apt-get upgrade -y
+            cd /var/www/html
+            touch test.txt
+            echo "I WAS UPDATED BY THE CICD PIPELINE" > test.txt
+```
+
+This pipeline basically says:
+
+- "connect to the machine with IP SSH_HOT, using the SSH_PRIV_KEY and the SSH_USERNAME"
+- "run the commands specified after the | character in the remote machine"
+- "create a file within the machine so we can check that the site was updated"
+
+2. create the relevant GitHub repo secrets for `SSH_HOST`, `SSH_PRIV_KEY`, and `SSH_USERNAME`; for the private key, just copy-paste its content in the value of the secret.
+3. make a change to `echo "I WAS UPDATED BY THE CICD PIPELINE" > test.txt`
+4. push the change to the `main` branch and wait for the action to complete
+5. check the VM's IP and see if the file was updated at `/test.txt` URL
+
+
+## deploy like in 2024
+
+- go inside the VM and delete the file `test.txt` (delete its creation inside the pipeline as well)
+- add the new GitHub Actions job that copies the contents of the `html` folder within the VM's `/var/www/html` folder
+- change the contents of the `html` folder in your repo
+- check that the changes have been reflected on the Internet after the action has run
