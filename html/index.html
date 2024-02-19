@@ -3,12 +3,127 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PerfectTicket</title>
+    <title>PerfectTicket | your tickets</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .button {
+            padding: 5px 10px;
+            border: 1px solid #007bff;
+            border-radius: 4px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .button:hover {
+            background-color: #0062cc;
+        }
+
+        .status-label {
+            background-color: #f0ad4e;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+
+        .assigned {
+            background-color: #5cb85c;
+        }
+
+        .unassigned {
+            background-color: #f0ad4e;
+        }
+    </style>
 </head>
 <body>
-    
-    <h1>PerfectTicket</h1>
-    <p>L'app' de ticketing dont vous avez toujours rêvé !</p>
+    <h1>Perfect Ticket | your tickets</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Ticket ID</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Assigned To</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            </tbody>
+    </table>
 
+    <script>
+        // JavaScript code to dynamically populate ticket rows and handle actions
+        // (Replace with your specific implementation based on data source and functionality)
+
+        // Sample ticket data (replace with your actual data)
+        const tickets = [
+            {
+                id: 1,
+                title: "Fix broken login form",
+                description: "The login form is not submitting correctly.",
+                status: "Open",
+                assignedTo: "John Doe",
+            },
+            {
+                id: 2,
+                title: "Implement new search feature",
+                description: "Users should be able to search for content on the website.",
+                status: "In Progress",
+                assignedTo: null,
+            },
+            // ... more tickets
+        ];
+
+        // Generate HTML for each ticket row
+        tickets.forEach(ticket => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${ticket.id}</td>
+                <td>${ticket.title}</td>
+                <td>${ticket.description}</td>
+                <td>
+                    <span class="status-label ${ticket.status === 'Assigned' ? 'assigned' : 'unassigned'}">${ticket.status}</span>
+                </td>
+                <td>${ticket.assignedTo || '-'}</td>
+                <td class="action-buttons">
+                    <button class="button" onclick="deleteTicket(${ticket.id})">Delete</button>
+                    <button class="button" onclick="assignTicket(${ticket.id})">Assign</button>
+                </td>
+            `;
+            document.querySelector('tbody').appendChild(tr);
+        });
+
+        // Define functions for deleteTicket and assignTicket (implement functionality here)
+        function deleteTicket(id) {
+            // Implement logic to delete the ticket with ID `id` (e.g., send an API request)
+            // Update the table UI accordingly (e.g., remove the corresponding row)
+        }
+
+        function assignTicket(id) {
+            // Implement logic to open an assignment dialog or trigger an assignment action (e.g., using a modal or form)
+            // Update the table UI to reflect the assigned user (e.g., update the `Assigned To` cell)
+        }
+    </script>
 </body>
 </html>
