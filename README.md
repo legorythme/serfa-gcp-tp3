@@ -15,9 +15,7 @@ gcloud compute instances create test-server \
     --metadata=startup-script=\ \
 \#\!\ /bin/bash$'\n'\ apt\ update$'\n'\ apt\ -y\ install\ apache2$'\n'\ cat\ \<\<EOF\ \>\ /var/www/html/index.html$'\n'\ \<html\>\<body\>\<p\>Linux\ startup\ script\ added\ directly.\</p\>\</body\>\</html\>$'\n'\ EOF \
     --no-restart-on-failure \
-    --maintenance-policy=TERMINATE \
-    --provisioning-model=SPOT \
-    --instance-termination-action=DELETE \
+    --provisioning-model=STANDARD \
     --service-account=DEFAULT_COMPUTE_SERVICE ACCOUNT \
     --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/trace.append \
     --tags=http-server \

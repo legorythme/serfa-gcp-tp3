@@ -31,9 +31,7 @@ def create_vm(vm_name: str, tags: str = "http-server"):
     --network-interface=network-tier=PREMIUM,stack-type=IPV4_ONLY,subnet=default \
     --metadata-from-file=startup-script=startup.sh \
     --no-restart-on-failure \
-    --maintenance-policy=TERMINATE \
-    --provisioning-model=SPOT \
-    --instance-termination-action=DELETE \
+    --provisioning-model=STANDARD \
     --service-account={os.getenv('DEFAULT_COMPUTE_SERVICE_ACCOUNT')} \
     --scopes=https://www.googleapis.com/auth/devstorage.read_only,https://www.googleapis.com/auth/logging.write,https://www.googleapis.com/auth/monitoring.write,https://www.googleapis.com/auth/servicecontrol,https://www.googleapis.com/auth/service.management.readonly,https://www.googleapis.com/auth/trace.append \
     --tags={tags} \
