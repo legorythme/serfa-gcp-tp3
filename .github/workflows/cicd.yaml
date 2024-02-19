@@ -24,6 +24,7 @@ jobs:
         script_stop: true
         # all the commands you see after the `|` will be executed in the remote machine
         script: |
+            sudo apt-get update && sudo apt-get upgrade -y
             cd /var/www/html
             touch test.txt
             echo "I WAS UPDATED BY THE CICD PIPELINE" > test.txt
