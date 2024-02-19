@@ -46,6 +46,6 @@ COPY ./gcp-vm.py /gcp-vm.py
 
 # `ENTRYPOINT` allows me to run the container as an executable,
 # with the parameters I want to pass to the script:
-# `docker run MY_IMAGE param1 param2` =>  `python3 /gcp-vm.py param1 param2`;
+# `docker run MY_IMAGE param1 param2` =>  `python3 /gcp-vm.py {command} {name}`;
 # `CMD` and `ENTRYPOINT` are not executed during the build, only when the container runs
 ENTRYPOINT [ "python3", "/gcp-vm.py" ]

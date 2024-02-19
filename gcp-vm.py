@@ -29,8 +29,7 @@ def create_vm(vm_name: str, tags: str = "http-server"):
     --zone={os.getenv('GCP_ZONE')} \
     --machine-type=e2-standard-2 \
     --network-interface=network-tier=PREMIUM,stack-type=IPV4_ONLY,subnet=default \
-    --metadata=startup-script=\\#\\!\\ \
-/bin/bash'\n'apt\\ update'\n'apt\\ install\\ -y\\ apache2 \
+    --metadata-from-file=startup-script=startup.sh \
     --no-restart-on-failure \
     --maintenance-policy=TERMINATE \
     --provisioning-model=SPOT \
@@ -77,7 +76,7 @@ def get_vm_ip(vm_name: str) :
     print(str(e))
     print(f"error getting IP for VM instance {vm_name}")
   
-# running script code starts here,
+# ! running script code starts here,
 # what is before are declarations of functions
 if __name__ == '__main__':
   # load environment variables from .env file

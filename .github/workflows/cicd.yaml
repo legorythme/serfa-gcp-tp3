@@ -7,10 +7,10 @@
 # jobs:
 
   # ! before testing the CI/CD pipeline:
-  # ! 1. `gcloud compute ssh VM_NAME --zone=ZONE` to create SSH keys
+  # ! 1. `gcloud compute ssh VM_NAME --zone=ZONE` to create SSH keys, this will allow you to access the VM, the you can exit it
   # ! 2. write down the location of the PRIVATE key (not the one ending with `.pub`)
-  # ! 3. `eval "$(ssh-agent -s)" && ssh-add google_compute_engine` => this tells the SSH agent on your machine that you acting as X
-  # ! 4. `ssh USERNAME@IP_ADRESS` 
+  # ! 3. TO RUN ON YOUR LOCAL MACHINE => `eval "$(ssh-agent -s)" && ssh-add google_compute_engine` => this tells the SSH agent on your machine that you acting as X
+  # ! 4. `ssh USERNAME@IP_ADRESS` (you can get your username with `gcloud compute ssh` command from within the VM) 
 
 #   gcp-vm-sysadmin:
 #     name: gcp-vm-sysadmin
