@@ -9,4 +9,3 @@ docker run gcp-vm create test-vm
 docker run gcp-vm enable-http
 docker run gcp-vm ip test-vm
 # docker run gcp-vm delete test-vm
-
