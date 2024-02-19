@@ -6,10 +6,12 @@ on:
 
 jobs:
 
+  # in this job, we will install/update dependencies and change global environment
   gcp-vm-sysadmin:
     name: gcp-vm-sysadmin
     runs-on: ubuntu-latest
     steps:
+    # you can have a glance at all the available actions in https://github.com/marketplace?type=actions
     - name: sysadmin ops on GCP VM
       uses: appleboy/ssh-action@v1.0.1
       env:
@@ -21,10 +23,28 @@ jobs:
         key: ${{ secrets.SSH_PRIV_KEY }}
         port: 22
         username: ${{ secrets.SSH_USERNAME }}
+        # stops the rest of the script if an error is encountered
         script_stop: true
         # all the commands you see after the `|` will be executed in the remote machine
         script: |
-            sudo apt-get update && sudo apt-get upgrade -y
-            cd /var/www/html
-            touch test.txt
-            echo "I WAS UPDATED BY THE CICD PIPELINE 2" > test.txt
+          sudo apt-get update && sudo apt-get upgrade -y
+
+  update-frontend:
+    name: update-frontend
+    needs: gcp-vm-sysadmin
+    runs-on: ubuntu-latest
+    steps:
+      # we checkout the repo
+      # this does `git clone git:myrepo.git && cd myrepo`
+      - name: actions/checkout@v4
+        uses: actions/checkout@v4 
+    # we copy inside /var/www/html the content of the repo
+      - name: copy-frontend
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIV_KEY }}
+          port: 22
+          source: html/*
+          target: /var/www
