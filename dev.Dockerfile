@@ -40,6 +40,7 @@ RUN pip install -r /requirements.txt
 
 # copy the script
 COPY ./gcp-vm.py /gcp-vm.py
+COPY ./startup.sh /startup.sh
 
 # ! dev to run the container indefinitely (better for debugging)
 # CMD ["sh", "-c", "tail -f /dev/null"]
