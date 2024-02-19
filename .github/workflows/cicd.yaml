@@ -27,4 +27,4 @@ jobs:
             sudo apt-get update && sudo apt-get upgrade -y
             cd /var/www/html
             touch test.txt
-            echo "I WAS UPDATED BY THE CICD PIPELINE" > test.txt
+            echo "I WAS UPDATED BY THE CICD PIPELINE 2" > test.txt
