@@ -177,3 +177,52 @@ This pipeline basically says:
 - add the new GitHub Actions job that copies the contents of the `html` folder within the VM's `/var/www/html` folder
 - change the contents of the `html` folder in your repo
 - check that the changes have been reflected on the Internet after the action has run
+
+## spec out the app's features: what does the app' do?
+
+It's an app' to manage tickets.
+
+- CRUD tickets
+- CRUD users
+- a `ticket` is a the description of a problem or a task
+- a ticket can be opened, closed
+- a ticket can have comments
+- a ticket has a resolution
+- there are permissions in the application:
+  - CRUD-related permissions
+  - close a ticket
+  - comment on a ticket
+  - open a ticket
+- these permissions are distributed among roles:
+  - admin
+  - requester
+  - support
+
+## spec out how we are going to do this technically
+
+### frontend
+
+What views/pages do we need ?
+
+- login page
+- home => lists all tickets
+  - ability to delete a ticket
+  - status labels of the tickets
+  - ticket assignement button
+- registration page
+- single ticket page
+  - ability to close the ticket
+  - contains comments
+  - delete button for the ticket
+  - edit form for the ticket
+  - field for resolution of ticket
+  - label for ticket status
+  - ticket assignement button
+- ticket creation page
+- users admin page:
+  - a user can be deleted
+  - lists users
+  - the role of a user can be changed
+  - there is an explanation of each role
+
+... the app' complexifies now, it's about time we use a project management tool !
