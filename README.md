@@ -226,3 +226,17 @@ What views/pages do we need ?
   - there is an explanation of each role
 
 ... the app' complexifies now, it's about time we use a project management tool !
+
+#### homepage with list of tickets
+
+1st [Gemini](https://gemini.google.com/app) prompt =>
+
+```
+You are a frontend developer. 
+Please write the HTML code that display a list of tickets as a table.
+Each ticket row has:
+
+- ability to delete a ticket
+- status labels of the tickets
+- ticket assignement button
+```
