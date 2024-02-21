@@ -1,0 +1,8 @@
+services:
+
+  nodejs:
+    build: 
+      context: .
+      dockerfile: nodejs.Dockerfile
+    volumes:
+      - .:/app
