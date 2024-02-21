@@ -1,6 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+import { getAnalytics } from "firebase/analytics";
 import { getDatabase } from "firebase/database";
 
 // TODO: Add SDKs for Firebase products that you want to use
