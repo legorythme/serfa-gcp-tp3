@@ -1,0 +1,15 @@
+{
+  "name": "perfect-ticket",
+  "version": "1.0.0",
+  "description": "the tickets app' you want to marry with",
+  "dependencies": {
+    "firebase": "^10.8.0"
+  },
+  "devDependencies": {
+    "webpack": "^5.90.3",
+    "webpack-cli": "^5.1.4"
+  },
+  "scripts": {
+    "build": "webpack --mode=development"
+  }
+}
