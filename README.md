@@ -392,7 +392,43 @@ Try this out ! run the Node.JS Docker Compose service, create a file inside the 
 3. we 've installed `firebase` and `webpack` with `npm install` from within our Node container
   - `firebase` is the Node.JS version of the previous code we have put in our HTML
   - `webpack` is the library that will help us translate the Node.JS code into something the browser can understand
+
+  ... these can be installed with `npm install firebase webpack webpack-cli`
+
 4. we moved the Firebase code from the frontend folder `html` to the `src` folder: this is the code that will be compiled by Webpack
-5. the guidelines of how to compile the code are specified in the `webpack.config.js` file
+5. the guidelines of how to compile the code are specified in the `webpack.config.js` file + we've added a script to compile the in our `package.json` file
+
+```json
+"scripts": {
+  "build": "webpack --mode=development"
+}
+```
+
+... now we can run `npm run build` and see the bundled code appear in `html/javascript/firebase-bundle.js` !
+
 6. we rebuilt our Docker app' image
 7. we checked in the browser if the database error has disappeared, and it has !
+
+### trying Firebase locally
+
+- for testing, we want to write something to Firebase every time the page is loaded
+- we use a development branch (we don't want to push the code online)
+- we run `docker compose watch`:
+  - we can access the `nodejs` container at all times
+  - every time we run `npm run build`, the site is updated
+
+... even if we follow the docs, we don't seem to be able to communicate with our Firebase instance, that's a shame, moving to another technology since the goal of selecting Firebase was to go faster.
+
+What we keep from this experience is the Javascript bundling code and our development environment.
+
+
+### chosing a SQL database
+
+We select the default choice because of its popularity and its ease of use: PostgreSQL.
+
+We need 2 more components:
+
+- a web API
+- a database
+
+Let's start with the web API.

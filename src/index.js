@@ -1,27 +1,55 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import { getDatabase } from "firebase/database";
+async function getTickets() {
+  try {
+    const call = await fetch("http://localhost/api/tickets");
+    const data = await call.json();
+    return data;
+  } catch (error) {
+    console.error("Error:", error);
+    return [];
+  }
+}
 
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+// when my HTML page is full loaded, trigger that code
+document.addEventListener("DOMContentLoaded", async () => {
+  console.log("javascript is loaded");
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyBbpPuvyJOB0-mkiea_VHg1Sj389jf7KtU",
-  authDomain: "gcloud-vm-project.firebaseapp.com",
-  projectId: "gcloud-vm-project",
-  storageBucket: "gcloud-vm-project.appspot.com",
-  messagingSenderId: "195848646059",
-  appId: "1:195848646059:web:14b7c0d48db9b19015b6ee",
-  measurementId: "G-PWMLFLH7YP",
-  databaseUrl: "https://gcloud-vm-project-default-rtdb.europe-west1.firebasedatabase.app/",
-};
+  // Sample ticket data (replace with your actual data)
+  // const tickets = [
+  //     {
+  //         id: 1,
+  //         title: "Fix broken login form",
+  //         description: "The login form is not submitting correctly.",
+  //         status: "Open",
+  //         assignedTo: "John Doe",
+  //     },
+  //     {
+  //         id: 2,
+  //         title: "Implement new search feature",
+  //         description: "Users should be able to search for content on the website.",
+  //         status: "In Progress",
+  //         assignedTo: null,
+  //     },
+  //     // ... more tickets
+  // ];
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+  const tickets = await getTickets();
 
-// initialize database
-const database = getDatabase(app);
+  // Generate HTML for each ticket row
+  tickets.forEach((ticket) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+            <td>${ticket.id}</td>
+            <td>${ticket.title}</td>
+            <td>${ticket.description}</td>
+            <td>
+                <span class="status-label ${ticket.status === "Assigned" ? "assigned" : "unassigned"}">${ticket.status}</span>
+            </td>
+            <td>${ticket.assignedTo || "-"}</td>
+            <td class="action-buttons">
+                <button class="button" onclick="deleteTicket(${ticket.id})">Delete</button>
+                <button class="button" onclick="assignTicket(${ticket.id})">Assign</button>
+            </td>
+        `;
+    document.querySelector("tbody").appendChild(tr);
+  });
+});
