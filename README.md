@@ -437,3 +437,7 @@ Let's start with the web API.
 
 - we managed to route traffic to a PHP file using a PHP Apache conf locally using the `php:apache` Docker image
 - now, if we want that to work on the remote, we need to install PHP in the VM in the CI/CD pipeline
+
+### getting our tickets from our first API route
+
+- now we have moved the tickets to a PHP API endpoint and we have set up routing in the `index.php` file

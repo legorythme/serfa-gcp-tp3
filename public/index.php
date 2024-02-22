@@ -29,6 +29,8 @@ switch ($path) {
     break;
 
   case '/api/tickets':
+    // enable CORS
+    header('Access-Control-Allow-Origin: localhost');
     // display the tickets
     echo json_encode($tickets);
     break;
