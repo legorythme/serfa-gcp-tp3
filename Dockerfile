@@ -1,6 +1,11 @@
 FROM php:apache
 
-RUN apt-get update && apt-get upgrade -y && apt-get install -y zip
+RUN apt-get update && apt-get upgrade -y && apt-get install -y \
+    libpq-dev \
+    zip
+
+RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
+    && docker-php-ext-install pgsql pdo_pgsql
 
 # copy Apache virtual host
 COPY ./conf/apache.conf /etc/apache2/sites-available/000-default.conf

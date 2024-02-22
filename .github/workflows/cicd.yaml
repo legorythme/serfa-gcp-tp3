@@ -41,7 +41,7 @@ jobs:
         script: |
           echo "updating system"
           sudo apt-get update && sudo apt-get upgrade -y
-          sudo apt-get install -y php zip git
+          sudo apt-get install -y git libpq-dev php php-pgsql zip
           echo "installing apache"
           cd /etc/apache2/sites-available
           sudo cp ~/conf/apache.conf /etc/apache2/sites-available/000-default.conf
@@ -79,6 +79,11 @@ jobs:
       - name: env-and-composer
         uses: appleboy/ssh-action@v1.0.1
         env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
           HOST: ${{ secrets.HOST }}
         with:
           # should be the IP address of your VM
@@ -89,12 +94,17 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           # stops the rest of the script if an error is encountered
           script_stop: true
-          envs: HOST
+          envs: DB_HOST,DB_NAME,DB_PASSWORD,DB_PORT,DB_USERNAME,HOST
           # all the commands you see after the `|` will be executed in the remote machine
           script: |
             cd /var/www/html
             touch .env
             > .env 
+            echo "DB_HOST=$DB_HOST" >> .env
+            echo "DB_NAME=$DB_NAME" >> .env
+            echo "DB_PASSWORD=$DB_PASSWORD" >> .env
+            echo "DB_PORT=$DB_PORT" >> .env
+            echo "DB_USERNAME=$DB_USERNAME" >> .env
             echo "HOST=$HOST" >> .env
             composer install
   

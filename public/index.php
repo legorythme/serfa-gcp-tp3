@@ -28,6 +28,30 @@ $tickets = [
   ],
 ];
 
+// connecting to the database
+$host = $_ENV['DB_HOST'];
+$dbname = $_ENV['DB_NAME'];
+$password = $_ENV['DB_PASSWORD'];
+$port = $_ENV['DB_PORT'];
+$username =  $_ENV['DB_USERNAME'];
+try {
+  $conn = new PDO("pgsql:host=$host;dbname=$dbname;port=$port", $username, $password);
+  // set PDO error mode to exception
+  $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  echo "Connected successfully";
+} catch (PDOException $e) {
+  echo "Connection failed: " . $e->getMessage();
+}
+// making a dummy query
+$sql = "SELECT 1 as test";
+$stmt = $conn->prepare($sql);
+$stmt->execute();
+$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+print_r($result);
+$conn = null;
+die();
+
+// ROUTING
 switch ($path) {
   case '/':
     // get contents of the `views/home.html`
