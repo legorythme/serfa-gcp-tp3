@@ -39,7 +39,7 @@ jobs:
         # all the commands you see after the `|` will be executed in the remote machine
         script: |
           sudo apt-get update && sudo apt-get upgrade -y
-          sudo apt-get install php -y
+          sudo apt-get install -y php
           cd /etc/apache2/sites-available
           sudo cp ~/conf/apache.conf /etc/apache2/sites-available/000-default.conf
           sudo rm -rf ./conf

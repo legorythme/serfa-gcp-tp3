@@ -13,28 +13,10 @@ async function getTickets() {
 document.addEventListener("DOMContentLoaded", async () => {
   console.log("javascript is loaded");
 
-  // Sample ticket data (replace with your actual data)
-  // const tickets = [
-  //     {
-  //         id: 1,
-  //         title: "Fix broken login form",
-  //         description: "The login form is not submitting correctly.",
-  //         status: "Open",
-  //         assignedTo: "John Doe",
-  //     },
-  //     {
-  //         id: 2,
-  //         title: "Implement new search feature",
-  //         description: "Users should be able to search for content on the website.",
-  //         status: "In Progress",
-  //         assignedTo: null,
-  //     },
-  //     // ... more tickets
-  // ];
+  let tickets = [];
+  tickets = await getTickets();
 
-  const tickets = await getTickets();
-
-  // Generate HTML for each ticket row
+  // generate HTML for each ticket row
   tickets.forEach((ticket) => {
     const tr = document.createElement("tr");
     tr.innerHTML = `
