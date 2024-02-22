@@ -446,3 +446,8 @@ Let's start with the web API.
 - we created a dynamic environment variable `HOST` to select the correct host for Javascript based on the environment
 
 ... update your `HOST` environment variable locally and on the remote VM!
+
+### cool, let's move on to the database
+
+- we have created an instance of PostgreSQL in our Docker Compose file + a `pgadmin` GUI instance to manage it
+- run the dockerized locally and connect to your database with `pgadmin`!
