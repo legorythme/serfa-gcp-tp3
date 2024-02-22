@@ -7,7 +7,7 @@ services:
     develop:
       watch:
         - action: sync
-          path: ./html
+          path: ./
           target: /var/www/html
     ports:
       - "80:80"
