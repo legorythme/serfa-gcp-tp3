@@ -1,6 +1,6 @@
 async function getTickets() {
   try {
-    const call = await fetch("/api/tickets");
+    const call = await fetch(`${window.HOST}/api/tickets`);
     const data = await call.json();
     return data;
   } catch (error) {

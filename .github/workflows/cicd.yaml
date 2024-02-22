@@ -7,13 +7,13 @@ on:
 jobs:
 
   # in this job, we will install/update dependencies and change global environment
-  gcp-vm-sysadmin:
-    name: gcp-vm-sysadmin
+  sys-deps:
+    name: sys-deps
     runs-on: ubuntu-latest
     steps:
     - name: actions/checkout@v4
       uses: actions/checkout@v4 
-    - name: copy-frontend
+    - name: copy-apache-conf
       uses: appleboy/scp-action@v0.1.7
       with:
         host: ${{ secrets.SSH_HOST }}
@@ -37,19 +37,29 @@ jobs:
         # stops the rest of the script if an error is encountered
         script_stop: true
         # all the commands you see after the `|` will be executed in the remote machine
+        envs: DEBIAN_FRONTEND
         script: |
+          echo "updating system"
           sudo apt-get update && sudo apt-get upgrade -y
-          sudo apt-get install -y php
+          sudo apt-get install -y php zip git
+          echo "installing apache"
           cd /etc/apache2/sites-available
           sudo cp ~/conf/apache.conf /etc/apache2/sites-available/000-default.conf
           sudo rm -rf ./conf
           sudo a2enmod rewrite
           sudo a2enmod headers
           sudo systemctl restart apache2
+          echo "installing composer"
+          cd ~
+          php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+          php -r "if (hash_file('sha384', 'composer-setup.php') === 'edb40769019ccf227279e3bdd1f5b2e9950eb000c3233ee85148944e555d97be3ea4f40c3c2fe73b22f875385f6a5155') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+          php composer-setup.php
+          php -r "unlink('composer-setup.php');"
+          sudo mv composer.phar /usr/local/bin/composer
 
   update-application:
     name: update-application
-    needs: gcp-vm-sysadmin
+    needs: sys-deps
     runs-on: ubuntu-latest
     steps:
       # we checkout the repo
@@ -66,3 +76,25 @@ jobs:
           port: 22
           source: "*"
           target: /var/www/html
+      - name: env-and-composer
+        uses: appleboy/ssh-action@v1.0.1
+        env:
+          HOST: ${{ secrets.HOST }}
+        with:
+          # should be the IP address of your VM
+          host: ${{ secrets.SSH_HOST }}
+          # should be the SSH key that you used to connect to the VM
+          key: ${{ secrets.SSH_PRIV_KEY }}
+          port: 22
+          username: ${{ secrets.SSH_USERNAME }}
+          # stops the rest of the script if an error is encountered
+          script_stop: true
+          envs: HOST
+          # all the commands you see after the `|` will be executed in the remote machine
+          script: |
+            cd /var/www/html
+            touch .env
+            > .env 
+            echo "HOST=$HOST" >> .env
+            composer install
+  

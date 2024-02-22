@@ -4,13 +4,10 @@ services:
     build: 
       context: .
       dockerfile: Dockerfile
-    develop:
-      watch:
-        - action: sync
-          path: ./
-          target: /var/www/html
     ports:
       - "80:80"
+    volumes:
+      - .:/var/www/html
 
   nodejs:
     build: 

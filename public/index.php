@@ -1,9 +1,15 @@
 <?php
 
+require_once __DIR__ . '/../vendor/autoload.php';
+
+$dotenv = Dotenv\Dotenv::createImmutable(dirname(__DIR__));
+$dotenv->load();
+
 // get the requested path
 $path = $_SERVER['REQUEST_URI'];
 
 $home_html_contents = file_get_contents(__DIR__ . '/../views/home.html');
+$home_html_contents = str_replace('$HOST', $_ENV['HOST'], $home_html_contents);
 
 $tickets = [
   [
@@ -29,8 +35,6 @@ switch ($path) {
     break;
 
   case '/api/tickets':
-    // enable CORS
-    header('Access-Control-Allow-Origin: localhost');
     // display the tickets
     echo json_encode($tickets);
     break;
