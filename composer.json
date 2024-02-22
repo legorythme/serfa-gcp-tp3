@@ -1,0 +1,16 @@
+{
+    "name": "serfa/perfect-ticket",
+    "require": {
+        "vlucas/phpdotenv": "^5.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "Serfa\\PerfectTicket\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "serfa"
+        }
+    ]
+}
