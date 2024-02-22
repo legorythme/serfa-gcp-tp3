@@ -107,4 +107,5 @@ jobs:
             echo "DB_USERNAME=$DB_USERNAME" >> .env
             echo "HOST=$HOST" >> .env
             composer install
+            php ./scripts/migration.php
   

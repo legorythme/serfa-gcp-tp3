@@ -43,6 +43,7 @@ try {
   echo "Connection failed: " . $e->getMessage();
 }
 // making a dummy query
+// TODO get tickets from DB here
 $sql = "SELECT 1 as test";
 $stmt = $conn->prepare($sql);
 $stmt->execute();

@@ -1,8 +1,6 @@
 FROM php:apache
 
-RUN apt-get update && apt-get upgrade -y && apt-get install -y \
-    libpq-dev \
-    zip
+RUN apt-get update && apt-get upgrade -y && apt-get install -y libpq-dev zip
 
 RUN docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql \
     && docker-php-ext-install pgsql pdo_pgsql
@@ -24,4 +22,4 @@ RUN mv composer.phar /usr/local/bin/composer
 # copy application code
 COPY . /var/www/html
 
-CMD ["apache2-foreground"]
+CMD ["sh", "-c", "sleep 5 && php ./scripts/migration.php && apache2-foreground"]
