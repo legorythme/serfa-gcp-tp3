@@ -432,3 +432,8 @@ We need 2 more components:
 - a database
 
 Let's start with the web API.
+
+### starting to route traffic via a PHP index entrypoint
+
+- we managed to route traffic to a PHP file using a PHP Apache conf locally using the `php:apache` Docker image
+- now, if we want that to work on the remote, we need to install PHP in the VM in the CI/CD pipeline
