@@ -454,3 +454,12 @@ Let's start with the web API.
 - we are ready now to a remote Supabase instance; why Supabase? because it's easy and it's Postgres as well...
 
 ... create a supabase instance, connect to it from your PHP code locally, THEN connect to it from your PHP code on the remote VM.
+
+REMINDER: you need to install your application dependencies with Composer once the stack is up and running =>
+
+- `docker compose up -d`
+- `docker exec -it SERVICE_NAME bash`
+- `cd /var/www/html`
+- `composer install`
+
+... this wil1l map the `vendor` folder, that contains all the dependencies, to your local machine.
