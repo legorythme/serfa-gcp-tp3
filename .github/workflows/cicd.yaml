@@ -107,5 +107,4 @@ jobs:
             echo "DB_USERNAME=$DB_USERNAME" >> .env
             echo "HOST=$HOST" >> .env
             composer install
-            php ./scripts/migration.php
-  
+            # ! we don't want to run migrations automatically because it is a potentially destructive action
