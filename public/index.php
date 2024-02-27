@@ -8,58 +8,41 @@ $dotenv->load();
 // get the requested path
 $path = $_SERVER['REQUEST_URI'];
 
-$home_html_contents = file_get_contents(__DIR__ . '/../views/home.html');
-$home_html_contents = str_replace('$HOST', $_ENV['HOST'], $home_html_contents);
-
-$tickets = [
-  [
-    'id' => 1,
-    'title' => 'Fix broken login form',
-    'description' => 'The login form is not submitting correctly.',
-    'status' => 'Open',
-    'assignedTo' => 'John Doe',
-  ],
-  [
-    'id' => 2,
-    'title' => 'Implement new search feature',
-    'description' => 'Users should be able to search for content on the website.',
-    'status' => 'In Progress',
-    'assignedTo' => null,
-  ],
-];
-
-// connecting to the database
-$host = $_ENV['DB_HOST'];
-$dbname = $_ENV['DB_NAME'];
-$password = $_ENV['DB_PASSWORD'];
-$port = $_ENV['DB_PORT'];
-$username =  $_ENV['DB_USERNAME'];
-try {
-  $conn = new PDO("pgsql:host=$host;dbname=$dbname;port=$port", $username, $password);
-  // set PDO error mode to exception
-  $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-  echo "Connected successfully";
-} catch (PDOException $e) {
-  echo "Connection failed: " . $e->getMessage();
-}
-// making a dummy query
-// TODO get tickets from DB here
-$sql = "SELECT 1 as test";
-$stmt = $conn->prepare($sql);
-$stmt->execute();
-$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-print_r($result);
-$conn = null;
-die();
-
 // ROUTING
 switch ($path) {
   case '/':
+    $home_html_contents = file_get_contents(__DIR__ . '/../views/home.html');
+    $home_html_contents = str_replace('$HOST', $_ENV['HOST'], $home_html_contents);
     // get contents of the `views/home.html`
     echo $home_html_contents;
     break;
 
+    // this our first API endpoint
   case '/api/tickets':
+    // connecting to the database
+    $host = $_ENV['DB_HOST'];
+    $dbname = $_ENV['DB_NAME'];
+    $password = $_ENV['DB_PASSWORD'];
+    $port = $_ENV['DB_PORT'];
+    $username =  $_ENV['DB_USERNAME'];
+    try {
+      $conn = new PDO("pgsql:host=$host;dbname=$dbname;port=$port", $username, $password);
+      // set PDO error mode to exception
+      $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+      // echo "Connected successfully";
+    } catch (PDOException $e) {
+      // TODO log errors into a file
+      // echo "Connection failed: " . $e->getMessage();
+    }
+
+    // making a dummy query
+    // TODO get tickets from DB here
+    $sql = "SELECT title, description, status, assigned_to, created_at
+            FROM tickets";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute();
+    $tickets = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $conn = null;
     // display the tickets
     echo json_encode($tickets);
     break;

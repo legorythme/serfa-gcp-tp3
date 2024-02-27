@@ -26,7 +26,7 @@ $create_tickets_table = "CREATE TABLE IF NOT EXISTS tickets (
     title VARCHAR(100) NOT NULL,
     description TEXT,
     -- this line says that a status can only be 'open' or 'closed'
-    status VARCHAR(20) CHECK (status IN ('open', 'closed')) NOT NULL default 'open',
+    status VARCHAR(20) CHECK (status IN ('open', 'closed')) NOT NULL DEFAULT 'open',
     assigned_to VARCHAR(100),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )";
