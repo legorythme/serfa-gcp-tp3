@@ -464,6 +464,6 @@ REMINDER: you need to install your application dependencies with Composer once t
 - `cd /var/www/html`
 - `composer install`
 
-... this wil1l map the `vendor` folder, that contains all the dependencies, to your local machine.
+... this will map the `vendor` folder, that contains all the dependencies, to your local machine.
 
 Remember to run the migrations from the VM.
